@@ -1,0 +1,174 @@
+let questions=[{
+    question:"What is part of a database that holds only one type of information?",
+    answers:[
+        {text:"report",correct:"false"},
+        {text:"field",correct:"true"},
+        {text:"file",correct:"false"},
+        {text:"record",correct:"false"},
+    ]
+},
+{
+    question:"'OS' computer abbreviation usually means?",
+    answers:[
+        {text:"operating system",correct:"true"},
+        {text:"open software",correct:"false"},
+        {text:"optical sensor",correct:"false"},
+        {text:"order of significance",correct:"false"},
+    ]
+},
+{
+    question:" 'MOV' extension refers usually to what kind of file?",
+    answers:[
+        {text:"audio file",correct:"false"},
+        {text:"image file",correct:"false"},
+        {text:"Animation/movie file",correct:"true"},
+        {text:"ms office document",correct:"false"},
+    ]
+},  
+{
+    question:"Most modern TV's draw power even if turned off. The circuit the power is used in does what function?",
+    answers:[
+        {text:"sound",correct:"false"},
+        {text:"color balance",correct:"false"},
+        {text:"high voltage",correct:"false"},
+        {text:"remote control",correct:"true"},
+    ]
+},
+{
+    question:"Which is a type of Electrically-Erasable Programmable Read-Only Memory?",
+    answers:[
+        {text:"flash",correct:"true"},
+        {text:"flange",correct:"false"},
+        {text:"fury",correct:"false"},
+        {text:"FRAM",correct:"false"},
+    ]
+}, 
+{
+    question:"The purpose of choke in tube light is ?",
+    answers:[
+        {text:"to increase the current",correct:"false"},
+        {text:"to decrease the current",correct:"false"},
+        {text:"to increase the voltage momentarily",correct:"true"},
+        {text:"to decrease the voltage momentarily",correct:"false"},
+    ]
+},
+{
+    question:" 'MPG' extension refers usually to what kind of file?",
+    answers:[
+        {text:"Animation/movie file",correct:"true"},
+        {text:"word perfect documnet file",correct:"false"},
+        {text:"image file",correct:"false"},
+        {text:"MS Office document",correct:"false"},
+    ]
+},
+{
+    question:"Who developed Yahoo?",
+    answers:[
+        {text:"Dennis Ritchie & Ken Thompson",correct:"false"},
+        {text:"David Filo & Jerry Yang",correct:"true"},
+        {text:"Vint Cerf & Robert Kahn",correct:"false"},
+        {text:"Steve Case & Jeff Bezos",correct:"false"},
+    ]
+},
+{
+    question:"he most common format for a home video recorder is VHS. VHS stands for...?",
+    answers:[
+        {text:"very home system",correct:"false"},
+        {text:"Video Home System",correct:"true"},
+        {text:"viedo horizantal standard",correct:"false"},
+        {text:"voltage house standard",correct:"false"},
+    ]
+},
+{
+    question:"What frequency range is the High Frequency band?",
+    answers:[
+        {text:"100 kHz",correct:"false"},
+        {text:"30 to 300 MHz",correct:"false"},
+        {text:"3 to 30 MHz",correct:"true"},
+        {text:"1 GHz",correct:"false"},
+    ]
+},
+];
+const questionElement=document.getElementById("question");
+const answerButtons=document.getElementById("answer-buttons");
+const nextButton=document.getElementById("next-btn");
+
+let currentQuestionIndex = 0;
+let score = 0;
+function startQuiz(){
+    currentQuestionIndex =0;
+    score=0;
+    nextButton.innerHTML ="Next";
+    showQuestion();
+}
+
+function showQuestion(){
+    resetState();
+    let currentQuestion = questions[currentQuestionIndex];
+    let questionNo =currentQuestionIndex+1;
+    questionElement.innerHTML =questionNo+"."+currentQuestion.
+    question;
+
+    currentQuestion.answers.forEach(answer =>{
+        const button =document.createElement("button");
+        button.innerHTML =answer.text;
+        button.classList.add("btn");
+        answerButtons.appendChild(button);
+        if(answer.correct){
+            button.dataset.correct=answer.correct;
+        }
+        button.addEventListener("click",selectAnswer);
+
+
+    });
+
+}
+function resetState(){
+    nextButton.style.display = "none";
+    while(answerButtons.firstChild){
+        answerButtons.removeChild(answerButtons.firstChild);
+    }
+}
+function selectAnswer(e){
+    const selectedBtn = e.target;
+    const isCorrect=selectedBtn.dataset.correct==="true";
+    if(isCorrect){
+        selectedBtn.classList.add("correct");
+        score++;
+    }else{
+        selectedBtn.classList.add("incorrect");
+    }
+    Array.from(answerButtons.children).forEach(button =>{
+        if(button.dataset.correct==="true"){
+            button.classList.add("correct");
+
+        }
+        button.disabled=true;
+
+    });
+    nextButton.style.display="block";
+}
+
+function showScore(){
+    resetState();
+    questionElement.innerHTML = You scored ${score} out of ${questions.length}!;
+    nextButton.innerHTML="Retry";
+    nextButton.style.display="block";
+}
+
+function handleNextButton(){
+    currentQuestionIndex++;
+    if(currentQuestionIndex<questions.length){
+        showQuestion();
+    }else{
+        showScore();
+    }
+}
+nextButton.addEventListener("click",()=>{
+    if(currentQuestionIndex<questions.length){
+        handleNextButton();
+    }else{
+        startQuiz();
+    }
+});
+startQuiz();
